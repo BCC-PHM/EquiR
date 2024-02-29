@@ -39,3 +39,21 @@ devtools::install_github("BCC-PHM/EquiR")
 `EquiR` will automatically download any missing prerequisite
 libraries so this may take a few minutes the first time running it on
 your machine.
+
+### Loading EquiR
+
+Once installed, you can open a new file by clicking the icon in the top left corner of RStudio underneath "file". In this new script, you can load the library at the start of a new R script using the following function. 
+
+``` r
+library("EquiR")
+```
+
+### Data requirements 
+
+The `EquiR` pacakge supports three types of data frames provided by the users and they are:
+
+1.  Record level 
+2.  multidimensional 
+3.  Aggreated level 
+
+Different types of data frames require different functions to be used from the `EquiR` pacakge. The following is the demonstration  
