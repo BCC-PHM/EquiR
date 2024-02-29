@@ -196,4 +196,4 @@ This produces a graph that looks like this:
 ### Colour palette
 
 We can also change the colour palette by setting the `colour` argument.
-The default is set to `"blue"` and currently only two more palette are available.
+The default is set to `"blue"` and currently only two more palette are available namely `"red"` and `"green"`.
