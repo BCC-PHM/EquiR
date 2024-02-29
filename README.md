@@ -16,7 +16,9 @@ Late Updated: 2024-02-29
 
 ### What is EquiR?
 
-EquiR is an R package designed  specifically to streamline the creation of combined heatmap, column, and bar charts within a single graph, tailored for Birmingham City Council's needs. The primary objective of EquiR is to simplify the process of generating such visualizations, offering a range of functions optimised to accommodate various types of data frames provided by users.
+EquiR is an R package designed specifically to streamline the creation of combined heatmap, column, and bar charts within a single graph, tailored for Birmingham City Council's needs. The primary objective of EquiR is to simplify the process of generating such visualizations, offering a range of functions optimised to accommodate various types of data frames provided by users. 
+
+**!!Consider utilising categorical variables for plotting purposes, as it is advisable to convert continuous data into categories prior to utilising the functions.!!** 
 
 <div class="figure" style="text-align: center">
 <img src="https://github.com/BCC-PHM/EquiR/assets/98521529/0d8ebd8e-79ec-4ab3-87a3-bf704c6643dc" width="700">
@@ -56,19 +58,39 @@ The `EquiR` pacakge supports three types of data frames provided by the users an
 2.  multidimensional 
 3.  Aggreated level
 
-Different types of data frames require different functions to be used from the `EquiR` pacakge. The following is the demonstration 
+Different types of data frames require different functions to be used from the `EquiR` pacakge. The following is the demonstration:
 
 ### 1.Record level data  
+ Record-level data refers to individual entries or observations within a dataset, each representing a distinct unit or instance of information.
  
- | ID | Age | Gender | HEIGHT_value | WEIGHT_value | ALCOHOL_value | TC2HDL | HBA1C_value | Smoking_status   |
-|----|-----|--------|--------------|--------------|----------------|--------|--------------|------------------|
-| 1  | 42  | Male   | 1.83         | 84           | 4              | 5.2    | 42           | Never smoked     |
-| 24 | 66  | Male   | 1.66         | 72           | 0              | 3.5    | 44           | Non-smoker - history unknown |
-| 35 | 41  | Female | 1.515        | 66           | NA             | 5.3    | 35           | Never smoked     |
-| 41 | 42  | Female | 1.58         | 65           | 0              | 5.4    | 36           | Never smoked     |
-| 54 | 52  | Male   | 1.73         | 62           | 0              | 3.9    | 40           | Never smoked     |
-| 56 | 65  | Male   | 1.64         | 65           | 0              | 3.5    | 36           | Never smoked     |
-| 59 | 57  | Female | 1.51         | 85.4         | 0              | 3.5    | 45           | Never smoked     |
-| 80 | 44  | Male   | 1.69         | 55.5         | NA             | 5.6    | 40           | Current smoker   |
-| 89 | 48  | Female | 1.61         | 80           | 0              | 5.2    | 32           | Never smoked     |
-| 105| 45  | NA     | 1.83         | 84           | 0              | 4.1    | 38           | Current smoker   |
+| ID | Age | Gender | HEIGHT__value | WEIGHT_value | Smoking_status          | Ethnicity_Broad | Outcome      | IMD_decile |
+|----|-----|--------|---------------|--------------|--------------------------|-----------------|--------------|------------|
+| 1  | 42  | Male   | 1.83          | 84           | Never smoked             | Asian           | Normal       | IMD decile 3+ |
+| 24 | 66  | Male   | 1.66          | 72           | Non-smoker - history unknown | Asian     | Pre-diabetic | IMD decile 1 |
+| 35 | 41  | Female | 1.515         | 66           | Never smoked             | Asian           | Normal       | IMD decile 1 |
+| 41 | 42  | Female | 1.58          | 65           | Never smoked             | Asian           | Normal       | IMD decile 1 |
+| 54 | 52  | Male   | 1.73          | 62           | Never smoked             | Asian           | Normal       | IMD decile 3+ |
+
+The function you will need to use from "EquiR" to make the plot is `Ineq_record_level_heatmap()`. The function takes
+the following basic arguments:
+
+1.  `data`: A record level data supplied by users 
+2.  `col`:  A column from `data` consisting a categorical variable defined by user which will be the column of the heatmap
+3.  `row`:  A row from `data` consisting a categorical variable defined by user which will be the row of the heatmap
+4.  `coln`: The label to be displayed for the `col` on the graph defined by users
+5.  `rown`:  The label to be displayed for the `row` on the graph defined by users
+6.  `unit`:   Users defined unit to be displayed on the graph 
+7.  `colour`: User defined colour for the graph (Default = `"blue"`)
+
+Therefore, we can generate the graph by running:
+
+``` r
+Ineq_record_level_heatmap(data = "example_data",
+                          col = "Ethnicity_Broad",
+                          row = "IMD_decile",
+                          coln = "Eth",
+                          rown = "IMD",
+                          unit = "Count",
+                          colour = "blue" )
+```
+This produces a graph that looks like this:
