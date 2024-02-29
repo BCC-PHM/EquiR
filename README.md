@@ -52,8 +52,23 @@ library("EquiR")
 
 The `EquiR` pacakge supports three types of data frames provided by the users and they are:
 
-1.  Record level 
+1.  Record level
 2.  multidimensional 
-3.  Aggreated level 
+3.  Aggreated level
 
-Different types of data frames require different functions to be used from the `EquiR` pacakge. The following is the demonstration  
+Different types of data frames require different functions to be used from the `EquiR` pacakge. The following is the demonstration 
+
+### 1.Record level data  
+ 
+ | ID | Age | Gender | HEIGHT_value | WEIGHT_value | ALCOHOL_value | TC2HDL | HBA1C_value | Smoking_status   |
+|----|-----|--------|--------------|--------------|----------------|--------|--------------|------------------|
+| 1  | 42  | Male   | 1.83         | 84           | 4              | 5.2    | 42           | Never smoked     |
+| 24 | 66  | Male   | 1.66         | 72           | 0              | 3.5    | 44           | Non-smoker - history unknown |
+| 35 | 41  | Female | 1.515        | 66           | NA             | 5.3    | 35           | Never smoked     |
+| 41 | 42  | Female | 1.58         | 65           | 0              | 5.4    | 36           | Never smoked     |
+| 54 | 52  | Male   | 1.73         | 62           | 0              | 3.9    | 40           | Never smoked     |
+| 56 | 65  | Male   | 1.64         | 65           | 0              | 3.5    | 36           | Never smoked     |
+| 59 | 57  | Female | 1.51         | 85.4         | 0              | 3.5    | 45           | Never smoked     |
+| 80 | 44  | Male   | 1.69         | 55.5         | NA             | 5.6    | 40           | Current smoker   |
+| 89 | 48  | Female | 1.61         | 80           | 0              | 5.2    | 32           | Never smoked     |
+| 105| 45  | NA     | 1.83         | 84           | 0              | 4.1    | 38           | Current smoker   |
