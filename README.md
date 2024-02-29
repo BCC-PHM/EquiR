@@ -119,7 +119,7 @@ Multidimensional data refers to datasets or information that contain multiple va
 The function you will need to use from "EquiR" to make the plot is `Ineq_multidi_level_heatmap()`. The function takes
 the following basic arguments:
 
-1.  `data`: A record level data supplied by users 
+1.  `data`: A Multidimensional data supplied by users 
 2.  `col`:  A column from `data` consisting a categorical variable defined by user which will be the column of the heatmap
 3.  `row`:  A row from `data` consisting a categorical variable defined by user which will be the row of the heatmap
 4.  `value`: The variable that contains the sum of observations 
@@ -142,5 +142,10 @@ Ineq_multidi_level_heatmap(data = example_data2,
 ```
 This produces a graph that looks like this:
 
+<div class="figure" style="text-align: center">
+<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/c2e3bda5-a540-473d-83f9-eab913ef4652" width="700">
+<p class="caption">
+</p>
 
+</div>
 
