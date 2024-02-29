@@ -177,7 +177,7 @@ Therefore, we can generate the graph by running:
 Ineq_multidi_level_heatmap(data = example_data3, 
                            col = "Ethnicity", 
                            row = "reason", 
-                           value= "Observation",
+                           value= "Values",
                            coln = "Eth", 
                            rown = "reason", 
                            unit = "Count", 
