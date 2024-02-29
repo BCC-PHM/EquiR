@@ -55,7 +55,7 @@ library("EquiR")
 The `EquiR` pacakge supports three types of data frames provided by the users and they are:
 
 1.  Record level
-2.  multidimensional 
+2.  Multidimensional 
 3.  Aggreated level
 
 Different types of data frames require different functions to be used from the `EquiR` pacakge. The following is the demonstration:
@@ -85,7 +85,7 @@ the following basic arguments:
 Therefore, we can generate the graph by running:
 
 ``` r
-Ineq_record_level_heatmap(data = "example_data",
+Ineq_record_level_heatmap(data = example_data,
                           col = "Ethnicity_Broad",
                           row = "IMD_decile",
                           coln = "Eth",
@@ -94,3 +94,53 @@ Ineq_record_level_heatmap(data = "example_data",
                           colour = "blue" )
 ```
 This produces a graph that looks like this:
+
+<div class="figure" style="text-align: center">
+<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/0d8ebd8e-79ec-4ab3-87a3-bf704c6643dc" width="700">
+<p class="caption">
+</p>
+
+</div>
+
+### 2.Multidimensional data
+Multidimensional data refers to datasets or information that contain multiple variables or dimensions(>=3), while a single column summarises the number of observations corresponding to individuals meeting specific conditions.
+
+| LA Code | LA | Ethnic_group | Economic_inactive          | Age                    | Observation |
+|-----------------------------------|-------------------------------|--------------|-----------------------------|------------------------|-------------|
+| E08000025                         | Birmingham                    | White        | Retired                     | Aged 65 years and over | 97864       |
+| E08000025                         | Birmingham                    | Asian        | Student                     | Aged 16 to 24 years    | 30507       |
+| E08000025                         | Birmingham                    | White        | Student                     | Aged 16 to 24 years    | 28167       |
+| E08000025                         | Birmingham                    | Asian        | Looking after home or family | Aged 35 to 49 years    | 18123       |
+| E08000025                         | Birmingham                    | Asian        | Retired                     | Aged 65 years and over | 16280       |
+| E08000025                         | Birmingham                    | White        | Long-term sick or disabled  | Aged 50 to 64 years    | 13759       |
+| E08000025                         | Birmingham                    | White        | Retired                     | Aged 50 to 64 years    | 10661       |
+| E08000025                         | Birmingham                    | Black        | Student                     | Aged 16 to 24 years    | 10010       |
+
+The function you will need to use from "EquiR" to make the plot is `Ineq_multidi_level_heatmap()`. The function takes
+the following basic arguments:
+
+1.  `data`: A record level data supplied by users 
+2.  `col`:  A column from `data` consisting a categorical variable defined by user which will be the column of the heatmap
+3.  `row`:  A row from `data` consisting a categorical variable defined by user which will be the row of the heatmap
+4.  `value`: The variable that contains the sum of observations 
+5.  `coln`: The label to be displayed for the `col` on the graph defined by users
+6.  `rown`:  The label to be displayed for the `row` on the graph defined by users
+7.  `unit`:   Users defined unit to be displayed on the graph 
+8.  `colour`: User defined colour for the graph (Default = `"blue"`)
+
+Therefore, we can generate the graph by running:
+
+``` r
+Ineq_multidi_level_heatmap(data = example_data2, 
+                           col = "Ethnic_group", 
+                           row = "Economic_inactive", 
+                           value= "Observation",
+                           coln = "Eth", 
+                           rown = "reason", 
+                           unit = "Count", 
+                           colour = "red")
+```
+This produces a graph that looks like this:
+
+
+
