@@ -145,6 +145,7 @@ This produces a graph that looks like this:
 <img src="https://github.com/BCC-PHM/EquiR/assets/98521529/71887ebb-7e02-4592-8b2c-08a5848b8fbe" width="700">
 <p class="caption">
 </p>
+</div>
 
 ### 3.Aggreated level data
 Aggregated level data within this package refers to information that has been combined or summarised from individual-level data to provide a higher-level perspective or summary. This dataframe is designed to include only two columns of categorical variables and one column for observations. 
@@ -183,3 +184,16 @@ Ineq_multidi_level_heatmap(data = example_data3,
                            colour = "blue")
 ```
 This produces a graph that looks like this:
+
+<div class="figure" style="text-align: center">
+<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/9b88919c-899c-444b-ac87-dbe93451c0c7" width="700">
+<p class="caption">
+</p>
+</div>
+
+## Customising your graph
+
+### Colour palette
+
+We can also change the colour palette by setting the `colour` argument.
+The default is set to `"blue"` and currently only two more palette are available.
