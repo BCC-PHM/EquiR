@@ -131,7 +131,7 @@ the following basic arguments:
 Therefore, we can generate the graph by running:
 
 ``` r
-Ineq_multidi_level_heatmap(data = testdata_3, 
+Ineq_multidi_level_heatmap(data = example_data2, 
                            col = "Ethnic_group", 
                            row = "Age", 
                            value= "Observation",
@@ -141,15 +141,45 @@ Ineq_multidi_level_heatmap(data = testdata_3,
                            colour = "red")
 ```
 This produces a graph that looks like this:
-
 <div class="figure" style="text-align: center">
-<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/c2e3bda5-a540-473d-83f9-eab913ef4652" width="700">
+<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/71887ebb-7e02-4592-8b2c-08a5848b8fbe" width="700">
 <p class="caption">
 </p>
 
-</div>
-
 ### 3.Aggreated level data
 Aggregated level data within this package refers to information that has been combined or summarised from individual-level data to provide a higher-level perspective or summary. This dataframe is designed to include only two columns of categorical variables and one column for observations. 
+| Ethnicity | reason                         | Values |
+|-----------|--------------------------------|--------|
+| White     | Retired                        | 108806 |
+| Asian     | Looking after home or family   | 38004  |
+| Asian     | Student                        | 34357  |
+| Black     | Student                        | 31371  |
+| White     | Long-term sick or disabled     | 28841  |
+| White     | Looking after home or family   | 21297  |
+| Other     | Retired                        | 18448  |
 
+The function you will need to use from "EquiR" to make the plot is `Ineq_aggregated_level_heatmap()`. The function takes
+the following basic arguments:
 
+1.  `data`: An Aggreated level data supplied by users 
+2.  `col`:  A column from `data` consisting a categorical variable defined by user which will be the column of the heatmap
+3.  `row`:  A row from `data` consisting a categorical variable defined by user which will be the row of the heatmap
+4.  `value`: The variable that contains the sum of observations 
+5.  `coln`: The label to be displayed for the `col` on the graph defined by users
+6.  `rown`:  The label to be displayed for the `row` on the graph defined by users
+7.  `unit`:   Users defined unit to be displayed on the graph 
+8.  `colour`: User defined colour for the graph (Default = `"blue"`)
+
+Therefore, we can generate the graph by running:
+
+``` r
+Ineq_multidi_level_heatmap(data = example_data3, 
+                           col = "Ethnicity", 
+                           row = "reason", 
+                           value= "Observation",
+                           coln = "Eth", 
+                           rown = "reason", 
+                           unit = "Count", 
+                           colour = "blue")
+```
+This produces a graph that looks like this:
