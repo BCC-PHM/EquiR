@@ -1,0 +1,27 @@
+Package: EquiR
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: 
+    person("Chung", "Au-Yeung", , 
+           "Chung.Au-Yeung@birmingham.gov.uk", 
+           role = c("aut", "cre"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: The package provides a collection of utility functions for making heatmaps with bars 
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Imports:
+    cowplot,
+    egg,
+    ggplot2,
+    gridExtra,
+    readr,
+    readxl,
+    tidyverse
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
