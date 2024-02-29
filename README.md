@@ -131,12 +131,12 @@ the following basic arguments:
 Therefore, we can generate the graph by running:
 
 ``` r
-Ineq_multidi_level_heatmap(data = example_data2, 
+Ineq_multidi_level_heatmap(data = testdata_3, 
                            col = "Ethnic_group", 
-                           row = "Economic_inactive", 
+                           row = "Age", 
                            value= "Observation",
                            coln = "Eth", 
-                           rown = "reason", 
+                           rown = "Age gp", 
                            unit = "Count", 
                            colour = "red")
 ```
@@ -148,4 +148,8 @@ This produces a graph that looks like this:
 </p>
 
 </div>
+
+### 3.Aggreated level data
+Aggregated level data within this package refers to information that has been combined or summarised from individual-level data to provide a higher-level perspective or summary. This dataframe is designed to include only two columns of categorical variables and one column for observations. 
+
 
