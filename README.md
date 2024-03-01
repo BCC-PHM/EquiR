@@ -79,8 +79,9 @@ the following basic arguments:
 3.  `row`:  A row from `data` consisting a categorical variable defined by user which will be the row of the heatmap
 4.  `coln`: The label to be displayed for the `col` on the graph defined by users
 5.  `rown`:  The label to be displayed for the `row` on the graph defined by users
-6.  `unit`:   Users defined unit to be displayed on the graph 
-7.  `colour`: User defined colour for the graph (Default = `"blue"`)
+6.  `unit`:   user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically
+7.  `percent`: To allow the graph to display as percentage of total, the default dispaly is number
+8.  `colour`: User defined colour for the graph (Default = `"blue"`)
 
 Therefore, we can generate the graph by running:
 
@@ -125,8 +126,9 @@ the following basic arguments:
 4.  `value`: The variable that contains the sum of observations 
 5.  `coln`: The label to be displayed for the `col` on the graph defined by users
 6.  `rown`:  The label to be displayed for the `row` on the graph defined by users
-7.  `unit`:   Users defined unit to be displayed on the graph 
-8.  `colour`: User defined colour for the graph (Default = `"blue"`)
+7.  `unit`:   user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically
+8.  `percent`: To allow the graph to display as percentage of total, the default dispaly is number
+9.  `colour`: User defined colour for the graph (Default = `"blue"`)
 
 Therefore, we can generate the graph by running:
 
@@ -168,8 +170,9 @@ the following basic arguments:
 4.  `value`: The variable that contains the sum of observations 
 5.  `coln`: The label to be displayed for the `col` on the graph defined by users
 6.  `rown`:  The label to be displayed for the `row` on the graph defined by users
-7.  `unit`:   Users defined unit to be displayed on the graph 
-8.  `colour`: User defined colour for the graph (Default = `"blue"`)
+7.  `unit`:   user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically
+8.  `percent`: To allow the graph to display as percentage of total, the default dispaly is number
+9.  `colour`: User defined colour for the graph (Default = `"blue"`)
 
 Therefore, we can generate the graph by running:
 
@@ -197,3 +200,20 @@ This produces a graph that looks like this:
 
 We can also change the colour palette by setting the `colour` argument.
 The default is set to `"blue"` and currently only two more palette are available namely `"red"` and `"green"`.
+
+## Percentage option 
+We can also change the heatmap, bar and column into percentage of total, all the functions from "EquiR" have the option of turning the  `percent` argument on by passing `"percent= T"` . The `"unit" will automaticaly labeled as percentage if users do not supply one. 
+We can generate the graph in percentage by running:
+
+``` r
+Ineq_multidi_level_heatmap(data = example_data3,
+                           col = "Ethnic_group",
+                           row = "Age",
+                           value= "Observation",
+                           coln = "Eth",
+                           rown = "Age gp",
+                           percent = T,
+                           colour = "red")
+```
+
+This produces a graph that looks like this:
