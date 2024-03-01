@@ -11,7 +11,8 @@ Ineq_multidi_level_heatmap(
   value,
   coln,
   rown,
-  unit,
+  unit = NULL,
+  percent = F,
   colour = "blue"
 )
 }
@@ -29,6 +30,8 @@ Ineq_multidi_level_heatmap(
 \item{rown}{user customise row name}
 
 \item{unit}{user defined unit}
+
+\item{percent}{To allow the graph to display as percentage of total, the default dispaly is number}
 
 \item{colour}{user defined colour for the graph}
 }

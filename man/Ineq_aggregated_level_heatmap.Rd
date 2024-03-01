@@ -11,7 +11,8 @@ Ineq_aggregated_level_heatmap(
   value,
   coln,
   rown,
-  unit,
+  unit = NULL,
+  percent = F,
   colour = "blue"
 )
 }
@@ -28,7 +29,9 @@ Ineq_aggregated_level_heatmap(
 
 \item{rown}{user customise row name}
 
-\item{unit}{user defined unit}
+\item{unit}{user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically}
+
+\item{percent}{To allow the graph to display as percentage of total, the default dispaly is number}
 
 \item{colour}{user defined colour for the graph}
 }

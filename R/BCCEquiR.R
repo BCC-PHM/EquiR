@@ -8,7 +8,8 @@
 #' @param row    user defined row
 #' @param coln   user customise column name
 #' @param rown   user customise row name
-#' @param unit   user defined unit
+#' @param unit   user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically
+#' @param percent To allow the graph to display as percentage of total, the default dispaly is number
 #' @param colour user defined colour for the graph
 # Add returning value description and tag
 #' @returns A graph
@@ -21,11 +22,18 @@ Ineq_record_level_heatmap = function(data,
                                      row,
                                      coln,
                                      rown,
-                                     unit,
+                                     unit = NULL,
+                                     percent = F,
                                      colour = "blue" ){
 
   ##the first layer of transforming data for heatmap
-  heatmap_df = base::as.data.frame(base::table(data[[col]], data[[row]]))
+  if(percent %in% c(T, TRUE)){
+    heatmap_df = as.data.frame(table(data[[col]], data[[row]]))
+    heatmap_df = heatmap_df %>%
+      dplyr::mutate(Freq = as.numeric(format(round(Freq/sum(Freq)*100, 2), nsmall =2)))
+  } else{
+    heatmap_df = as.data.frame(table(data[[col]], data[[row]]))
+  }
 
   ##define threshold for geom text label
   threshold = stats::quantile(heatmap_df$Freq, probs = 0.99) ##to make the label white for greatest value
@@ -59,8 +67,27 @@ Ineq_record_level_heatmap = function(data,
     ggplot2::xlab({{coln}})+
     ggplot2::ylab({{rown}})
 
+
+  ##Handle unit display
+  if (!is.null(unit)) { #this check if user has supplied a unit, If they have,
+    # Use the user-supplied unit
+  } else {  #If not
+    if (percent %in% c(T, TRUE)) {  #determine the unit based on the Percent parameter.
+      unit <- "Percentage"
+    } else {
+      unit <- "Count"
+    }
+  }
+
+
   ##the second layer of transforming data for the upper bar chart
-  topbar_df = as.data.frame(table(data[[col]]))
+  if(percent %in% c(T, TRUE)){
+    topbar_df = as.data.frame(table(data[[col]]))
+    topbar_df = topbar_df %>%
+      dplyr::mutate(Freq = round(Freq/sum(Freq)*100, 2))
+  } else{
+    topbar_df = as.data.frame(table(data[[col]]))
+  }
 
   ##the top bar chart
   topbar  = ggplot2::ggplot(topbar_df, ggplot2::aes(x=Var1, y =Freq))+
@@ -74,7 +101,13 @@ Ineq_record_level_heatmap = function(data,
     ggplot2::ylab({{unit}})
 
   ##the third layer of transforming data for right hand side column chart
-  columnchart_df = as.data.frame(table(data[[row]]))
+  if(percent %in% c(T, TRUE)){
+    columnchart_df = as.data.frame(table(data[[row]]))
+    columnchart_df = columnchart_df %>%
+      dplyr::mutate(Freq = round(Freq/sum(Freq)*100, 2))
+  } else{
+    columnchart_df = as.data.frame(table(data[[row]]))
+  }
 
   ##the right hand side column chart
   columnchart  = ggplot2::ggplot(columnchart_df, ggplot2::aes(x=Var1, y =Freq))+
@@ -121,7 +154,8 @@ Ineq_record_level_heatmap = function(data,
 #' @param value  user defined value
 #' @param coln   user customise column name
 #' @param rown   user customise row name
-#' @param unit   user defined unit
+#' @param unit   user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically
+#' @param percent To allow the graph to display as percentage of total, the default dispaly is number
 #' @param colour user defined colour for the graph
 # Add returning value description and tag
 #' @returns A graph
@@ -135,10 +169,18 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
                                          value, #user defined column as the value
                                          coln, #user customise column name
                                          rown, #user customise row name
-                                         unit, #user defined unit
+                                         unit=NULL, #user defined unit
+                                         percent =F,
                                          colour = "blue" ){ #user defined colour for the graph
 
   ##the first layer of  heatmap
+  if(percent %in% c(T, TRUE)){
+    data[[value]] = round((data[[value]] / sum(data[[value]])) * 100, 2)
+  }else {
+    data[[value]]
+  }
+
+
 
   ##define threshold for geom text label
   threshold = stats::quantile(data[[value]], probs = 0.99) ##to make the label white for greatest value
@@ -174,12 +216,31 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
     ggplot2::ylab({{rown}})
 
 
-  ##the second layer of transforming data for the upper bar chart
-  topbar_df = data %>%
-    dplyr::select({{ col }}, {{ value }}) %>%
-    dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
-    dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
+  ##Handle unit display
+  if (!is.null(unit)) { #this check if user has supplied a unit, If they have,
+    # Use the user-supplied unit
+  } else {  #If not
+    if (percent %in% c(T, TRUE)) {  #determine the unit based on the Percent parameter.
+      unit = "Percentage"
+    } else {
+      unit = "Count"
+    }
+  }
 
+
+  ##the second layer of transforming data for the upper bar chart
+  if(percent %in% c(T, TRUE)){
+    topbar_df = data %>%
+      dplyr::select({{ col }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
+    topbar_df$Freq = round((topbar_df$Freq / sum(topbar_df$Freq)) * 100, 2)
+  }else{
+    topbar_df = data %>%
+      dplyr::select({{ col }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
+  }
 
 
   ##the top bar chart
@@ -194,9 +255,16 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
     ggplot2::ylab({{unit}})
 
   ##the third layer of transforming data for right hand side column chart
-  columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
-    dplyr::group_by(!!dplyr::sym({{ row }})) %>%
-    dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+  if(percent %in% c(T, TRUE)){
+    columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ row }})) %>%
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+    columnchart_df$Freq = round((columnchart_df$Freq / sum(columnchart_df$Freq)) * 100, 2)
+  }else{
+    columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ row }})) %>%
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+  }
 
   ##the right hand side column chart
   columnchart  = ggplot2::ggplot(columnchart_df, ggplot2::aes(!!dplyr::sym({{ row }}), y =Freq))+
@@ -248,6 +316,7 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
 #' @param coln   user customise column name
 #' @param rown   user customise row name
 #' @param unit   user defined unit
+#'@param percent To allow the graph to display as percentage of total, the default dispaly is number
 #' @param colour user defined colour for the graph
 # Add returning value description and tag
 #' @returns A graph
@@ -261,13 +330,21 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
                                       value, #user defined column as the value
                                       coln, #user customise column name
                                       rown, #user customise row name
-                                      unit, #user defined unit
+                                      unit=NULL, #user defined unit
+                                      percent=F,
                                       colour = "blue" ){ #user defined colour for the graph
 
   ##the first layer of transforming data for heatmap
+  if(percent %in% c(T, TRUE)){
   heatmap_df = data %>% dplyr::select({{ col }}, {{row}}, {{ value }}) %>%
     dplyr::group_by(!!dplyr::sym({{col}}), !!dplyr::sym({{row}})) %>%
     dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+  heatmap_df$Freq = round((heatmap_df$Freq/sum(heatmap_df$Freq)*100), 2)
+  }else{
+    heatmap_df = data %>% dplyr::select({{ col }}, {{row}}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{col}}), !!dplyr::sym({{row}})) %>%
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+  }
 
   ##define threshold for geom text label
   threshold = stats::quantile(heatmap_df$Freq, probs = 0.99) ##to make the label white for greatest value
@@ -303,12 +380,31 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
     ggplot2::ylab({{rown}})
 
 
+  ##Handle unit display
+  if (!is.null(unit)) { #this check if user has supplied a unit, If they have,
+    # Use the user-supplied unit
+  } else {  #If not
+    if (percent %in% c(T, TRUE)) {  #determine the unit based on the Percent parameter.
+      unit = "Percentage"
+    } else {
+      unit = "Count"
+    }
+  }
+
+
   ##the second layer of transforming data for the upper bar chart
+  if(percent %in% c(T, TRUE)){
   topbar_df = data %>%
     dplyr::select({{ col }}, {{ value }}) %>%
     dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
     dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
-
+  topbar_df$Freq = round((topbar_df$Freq/sum(topbar_df$Freq)*100), 2)
+  }else{
+    topbar_df = data %>%
+      dplyr::select({{ col }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
+  }
 
 
   ##the top bar chart
@@ -323,9 +419,16 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
     ggplot2::ylab({{unit}})
 
   ##the third layer of transforming data for right hand side column chart
-  columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
-    dplyr::group_by(!!dplyr::sym({{ row }})) %>%
-    dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+  if(percent %in% c(T, TRUE)){
+    columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ row }})) %>%
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+    columnchart_df$Freq = round((columnchart_df$Freq/sum(columnchart_df$Freq)*100), 2)
+  }else{
+    columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
+      dplyr::group_by(!!dplyr::sym({{ row }})) %>%
+      dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
+  }
 
   ##the right hand side column chart
   columnchart  = ggplot2::ggplot(columnchart_df, ggplot2::aes(columnchart_df[[row]], y = columnchart_df$Freq))+

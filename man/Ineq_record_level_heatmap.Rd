@@ -4,7 +4,16 @@
 \alias{Ineq_record_level_heatmap}
 \title{Making a heatmap with bar charts on the top and right on record level data}
 \usage{
-Ineq_record_level_heatmap(data, col, row, coln, rown, unit, colour = "blue")
+Ineq_record_level_heatmap(
+  data,
+  col,
+  row,
+  coln,
+  rown,
+  unit = NULL,
+  percent = F,
+  colour = "blue"
+)
 }
 \arguments{
 \item{data}{user supplied data}
@@ -17,7 +26,9 @@ Ineq_record_level_heatmap(data, col, row, coln, rown, unit, colour = "blue")
 
 \item{rown}{user customise row name}
 
-\item{unit}{user defined unit}
+\item{unit}{user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically}
+
+\item{percent}{To allow the graph to display as percentage of total, the default dispaly is number}
 
 \item{colour}{user defined colour for the graph}
 }
