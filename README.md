@@ -217,3 +217,8 @@ Ineq_multidi_level_heatmap(data = example_data3,
 ```
 
 This produces a graph that looks like this:
+<div class="figure" style="text-align: center">
+<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/d2fe3216-0de8-4690-92ce-c97119d5a0f5" width="700">
+<p class="caption">
+</p>
+</div>
