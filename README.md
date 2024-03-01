@@ -201,7 +201,7 @@ This produces a graph that looks like this:
 We can also change the colour palette by setting the `colour` argument.
 The default is set to `"blue"` and currently only two more palette are available namely `"red"` and `"green"`.
 
-## Percentage option 
+### Percentage option 
 We can also change the heatmap, bar and column into percentage of total, all the functions from "EquiR" have the option of turning the  `percent` argument on by passing `"percent= T"` . The `"unit"` will automaticaly labeled as percentage if users do not supply one. 
 We can generate the graph in percentage by running:
 
