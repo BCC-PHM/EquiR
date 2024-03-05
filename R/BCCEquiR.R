@@ -54,12 +54,24 @@ Ineq_record_level_heatmap = function(data,
   }
 
 
+
+  ##To include percentage sign for the heatmap text label and the bar and column scales into percentage
+  if(percent %in% c(T, TRUE)){
+    heatmap_label = paste0(heatmap_df$Freq, "%")
+    barscales = scales::percent_format()
+  } else{
+    heatmap_label = heatmap_df$Freq
+    barscales = scales::label_number()}
+
+
+
+
   ##the heatmap plot
   heatmap = ggplot2::ggplot(heatmap_df, ggplot2::aes(Var1, Var2, fill=Freq))+
     ggplot2::geom_tile( colour="White")+
     ggplot2::scale_fill_gradientn(colours = heatmap_colour,
                          breaks = colour_quantiles)+
-    ggplot2::geom_text(ggplot2::aes(x=Var1, y=Var2, label=Freq),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
+    ggplot2::geom_text(ggplot2::aes(x=Var1, y=Var2, label=heatmap_label),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
               size = 3)+
     ggplot2::theme_minimal()+
     ggplot2::theme(
@@ -84,7 +96,7 @@ Ineq_record_level_heatmap = function(data,
   if(percent %in% c(T, TRUE)){
     topbar_df = as.data.frame(table(data[[col]]))
     topbar_df = topbar_df %>%
-      dplyr::mutate(Freq = round(Freq/sum(Freq)*100, 2))
+      dplyr::mutate(Freq = round(Freq/sum(Freq), 2))
   } else{
     topbar_df = as.data.frame(table(data[[col]]))
   }
@@ -98,13 +110,14 @@ Ineq_record_level_heatmap = function(data,
           panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
           panel.background = ggplot2::element_blank(),
           legend.position="none")+
+    ggplot2::scale_y_continuous(labels = barscales)+
     ggplot2::ylab({{unit}})
 
   ##the third layer of transforming data for right hand side column chart
   if(percent %in% c(T, TRUE)){
     columnchart_df = as.data.frame(table(data[[row]]))
     columnchart_df = columnchart_df %>%
-      dplyr::mutate(Freq = round(Freq/sum(Freq)*100, 2))
+      dplyr::mutate(Freq = round(Freq/sum(Freq), 2))
   } else{
     columnchart_df = as.data.frame(table(data[[row]]))
   }
@@ -119,6 +132,7 @@ Ineq_record_level_heatmap = function(data,
           panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
           panel.background = ggplot2::element_blank(),
           legend.position="none")+
+    ggplot2::scale_y_continuous(labels = barscales)+
     ggplot2::ylab({{unit}})
 
 
@@ -144,6 +158,8 @@ Ineq_record_level_heatmap = function(data,
 
   return(inequality_matrix)
 }
+
+
 
 ######////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #' Making a heatmap with bar charts on the top and right on aggregated level data
@@ -201,13 +217,21 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
     bar_colour = "#0074B7"
   }
 
+  ##To include percentage sign for the heatmap text label and the bar and column scales into percentage
+  if(percent %in% c(T, TRUE)){
+    heatmap_label = paste0(data[[value]], "%")
+    barscales = scales::percent_format()
+  } else{
+    heatmap_label = data[[value]]
+    barscales = scales::label_number()}
+
 
   ##the heatmap plot
   heatmap = ggplot2::ggplot(data, ggplot2::aes(data[[col]], data[[row]], fill=data[[value]]))+
     ggplot2::geom_tile( colour="White")+
     ggplot2::scale_fill_gradientn(colours = heatmap_colour,
                                   breaks = colour_quantiles)+
-    ggplot2::geom_text(ggplot2::aes(x=data[[col]], y=data[[row]], label=data[[value]]),color = ifelse(data[[value]]>threshold, "white","black"),
+    ggplot2::geom_text(ggplot2::aes(x=data[[col]], y=data[[row]], label=heatmap_label),color = ifelse(data[[value]]>threshold, "white","black"),
                        size = 3)+
     ggplot2::theme_minimal()+
     ggplot2::theme(
@@ -234,7 +258,7 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
       dplyr::select({{ col }}, {{ value }}) %>%
       dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
       dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
-    topbar_df$Freq = round((topbar_df$Freq / sum(topbar_df$Freq)) * 100, 2)
+    topbar_df$Freq = round((topbar_df$Freq / sum(topbar_df$Freq)), 2)
   }else{
     topbar_df = data %>%
       dplyr::select({{ col }}, {{ value }}) %>%
@@ -252,6 +276,7 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
                    panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                    panel.background = ggplot2::element_blank(),
                    legend.position="none")+
+    ggplot2::scale_y_continuous(labels = barscales)+
     ggplot2::ylab({{unit}})
 
   ##the third layer of transforming data for right hand side column chart
@@ -259,7 +284,7 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
     columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
       dplyr::group_by(!!dplyr::sym({{ row }})) %>%
       dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
-    columnchart_df$Freq = round((columnchart_df$Freq / sum(columnchart_df$Freq)) * 100, 2)
+    columnchart_df$Freq = round((columnchart_df$Freq / sum(columnchart_df$Freq)), 2)
   }else{
     columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
       dplyr::group_by(!!dplyr::sym({{ row }})) %>%
@@ -277,6 +302,7 @@ Ineq_aggregated_level_heatmap = function(data, #user supplied data
                    panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                    panel.background = ggplot2::element_blank(),
                    legend.position="none")+
+    ggplot2::scale_y_continuous(labels = barscales)+
     ggplot2::ylab({{unit}})
 
 
@@ -366,12 +392,22 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
   }
 
 
+  ##To include percentage sign for the heatmap text label and the bar and column scales into percentage
+  if(percent %in% c(T, TRUE)){
+    heatmap_label = paste0(heatmap_df$Freq, "%")
+    barscales = scales::percent_format()
+  } else{
+    heatmap_label = heatmap_df$Freq
+    barscales = scales::label_number()}
+
+
+
   ##the heatmap plot
   heatmap = ggplot2::ggplot(heatmap_df, ggplot2::aes(heatmap_df[[col]], heatmap_df[[row]], fill=Freq))+
     ggplot2::geom_tile( colour="White")+
     ggplot2::scale_fill_gradientn(colours = heatmap_colour,
                                   breaks = colour_quantiles)+
-    ggplot2::geom_text(ggplot2::aes(x=heatmap_df[[col]], y=heatmap_df[[row]], label=heatmap_df$Freq),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
+    ggplot2::geom_text(ggplot2::aes(x=heatmap_df[[col]], y=heatmap_df[[row]], label=heatmap_label),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
                        size = 3)+
     ggplot2::theme_minimal()+
     ggplot2::theme(
@@ -398,7 +434,7 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
     dplyr::select({{ col }}, {{ value }}) %>%
     dplyr::group_by(!!dplyr::sym({{ col }})) %>% ##use !!sym to ensure {{ }} is properly evaluated as a column name
     dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))  ##use !!sym to ensure {{ }} is properly evaluated as a column name
-  topbar_df$Freq = round((topbar_df$Freq/sum(topbar_df$Freq)*100), 2)
+  topbar_df$Freq = round((topbar_df$Freq/sum(topbar_df$Freq)), 2)
   }else{
     topbar_df = data %>%
       dplyr::select({{ col }}, {{ value }}) %>%
@@ -416,6 +452,7 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
                    panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                    panel.background = ggplot2::element_blank(),
                    legend.position="none")+
+    ggplot2::scale_y_continuous(labels = barscales)+
     ggplot2::ylab({{unit}})
 
   ##the third layer of transforming data for right hand side column chart
@@ -423,7 +460,7 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
     columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
       dplyr::group_by(!!dplyr::sym({{ row }})) %>%
       dplyr::summarise(Freq = sum(!!dplyr::sym({{value}}), na.rm = TRUE))
-    columnchart_df$Freq = round((columnchart_df$Freq/sum(columnchart_df$Freq)*100), 2)
+    columnchart_df$Freq = round((columnchart_df$Freq/sum(columnchart_df$Freq)), 2)
   }else{
     columnchart_df = data %>% dplyr::select({{ row }}, {{ value }}) %>%
       dplyr::group_by(!!dplyr::sym({{ row }})) %>%
@@ -441,6 +478,7 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
                    panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                    panel.background = ggplot2::element_blank(),
                    legend.position="none")+
+    ggplot2::scale_y_continuous(labels = barscales)+
     ggplot2::ylab({{unit}})
 
   ##the fourth layer of making an empty plot for the top right hand corner
