@@ -1,13 +1,11 @@
 Package: EquiR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Utility Functions for Generating Heatmaps with Bar Charts
 Version: 0.1.5
 Authors@R: 
-    person("Chung", "Au-Yeung", , 
-           "Chung.Au-Yeung@birmingham.gov.uk", 
-           role = c("aut", "cre"))
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: The package provides a collection of utility functions for making heatmaps with bars 
+    person("Chung", "Au-Yeung", email = "Chung.Au-Yeung@birmingham.gov.uk", role = c("aut", "cre"))
+Maintainer: Chung Au-Yeung <Chung.Au-Yeung@birmingham.gov.uk>
+Description: This package provides a collection of utility functions for generating heatmaps combined with bar charts. It is designed to streamline data visualization for various applications.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
@@ -20,7 +18,6 @@ Imports:
     readr,
     readxl,
     dplyr,
-    tidyverse,
     scales
 Suggests: 
     testthat (>= 3.0.0)

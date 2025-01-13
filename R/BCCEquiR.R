@@ -179,10 +179,10 @@ Ineq_record_level_heatmap = function(data,
           legend.position="none")
 
   ##stick all the graph together
-  inequality_matrix = (topbar | empty_plot) /
-    (heatmap | columnchart) +
-    plot_layout(widths = c(3, 1), heights = c(1, 3))
-
+  inequality_matrix = ggarrange(topbar, empty_plot, heatmap, columnchart,
+            ncol=2, nrow =2,
+            widths = c(3,1),
+            heights = c(1,3))
 
   return(inequality_matrix)
 }
