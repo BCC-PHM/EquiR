@@ -1,17 +1,24 @@
 Package: EquiR
 Type: Package
 Title: Utility Functions for Generating Heatmaps with Bar Charts
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: 
-    person("Chung", "Au-Yeung", email = "Chung.Au-Yeung@birmingham.gov.uk", role = c("aut", "cre"))
+    person("Chung", "Au-Yeung", 
+           email = "Chung.Au-Yeung@birmingham.gov.uk", 
+           role = c("aut", "cre"))
 Maintainer: Chung Au-Yeung <Chung.Au-Yeung@birmingham.gov.uk>
-Description: This package provides a collection of utility functions for generating heatmaps combined with bar charts. It is designed to streamline data visualization for various applications.
+Description: This package provides a collection of utility functions for 
+    generating heatmaps combined with bar charts. It is designed to streamline 
+    data visualization for various applications, making it straightforward 
+    to highlight patterns and categories simultaneously.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
+
+# Typically, you only list R here if you really need a minimum version.
 Depends: 
-    R (>= 2.10)
-LazyData: true
+    R (>= 3.5.0)
+
 Imports:
     egg,
     ggplot2,
@@ -19,6 +26,9 @@ Imports:
     readxl,
     dplyr,
     scales
+
 Suggests: 
     testthat (>= 3.0.0)
+
 Config/testthat/edition: 3
+LazyData: true
