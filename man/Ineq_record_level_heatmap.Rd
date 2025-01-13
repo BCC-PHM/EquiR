@@ -11,7 +11,7 @@ Ineq_record_level_heatmap(
   coln,
   rown,
   unit = NULL,
-  percent = F,
+  outcome = NA,
   colour = "blue"
 )
 }
@@ -28,7 +28,7 @@ Ineq_record_level_heatmap(
 
 \item{unit}{user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically}
 
-\item{percent}{To allow the graph to display as percentage of total, the default dispaly is number}
+\item{outcome}{allow user to supply outcome variable to calculate within group percentage}
 
 \item{colour}{user defined colour for the graph}
 }
