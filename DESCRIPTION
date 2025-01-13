@@ -15,15 +15,19 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Depends: 
     R (>= 3.5.0),
-    matrixStats
+    egg,
+    ggplot2,
+    readr,
+    readxl,
+    dplyr,
+    scales
 Imports:
     egg,
     ggplot2,
     readr,
     readxl,
     dplyr,
-    scales,
-    matrixStats
+    scales
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
