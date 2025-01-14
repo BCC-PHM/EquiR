@@ -13,7 +13,7 @@ GitHub: [EquiR](https://github.com/BCC-PHM/EquiR)
 
 Chung Au-Yeung - BCC PHM
 
-Late Updated: 2024-02-29
+Late Updated: 2025-01-14
 
 **The latest update of version 0.1.7 only support the
 `Ineq_record_level_heatmap` function where `outcome` can be supplied by
@@ -81,7 +81,7 @@ Record-level data refers to individual entries or observations within a
 dataset, each representing a distinct unit or instance of information.
 
 | ID  | Age | Gender | HEIGHT\_\_value | WEIGHT_value | Smoking_status               | Ethnicity_Broad | Outcome      | IMD_decile    |
-|-----|-----|--------|-----------------|--------------|------------------------------|-----------------|--------------|---------------|
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|
 | 1   | 42  | Male   | 1.83            | 84           | Never smoked                 | Asian           | Normal       | IMD decile 3+ |
 | 24  | 66  | Male   | 1.66            | 72           | Non-smoker - history unknown | Asian           | Pre-diabetic | IMD decile 1  |
 | 35  | 41  | Female | 1.515           | 66           | Never smoked                 | Asian           | Normal       | IMD decile 1  |
@@ -168,7 +168,7 @@ the number of observations corresponding to individuals meeting specific
 conditions.
 
 | LA Code   | LA         | Ethnic_group | Economic_inactive            | Age                    | Observation |
-|-----------|------------|--------------|------------------------------|------------------------|-------------|
+|------------|------------|------------|------------|------------|------------|
 | E08000025 | Birmingham | White        | Retired                      | Aged 65 years and over | 97864       |
 | E08000025 | Birmingham | Asian        | Student                      | Aged 16 to 24 years    | 30507       |
 | E08000025 | Birmingham | White        | Student                      | Aged 16 to 24 years    | 28167       |
