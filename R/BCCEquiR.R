@@ -84,6 +84,12 @@ Ineq_record_level_heatmap = function(data,
 
 
 
+  ##Dynamically adjust coord_fixed(ratio = ...)
+  unique_x = length(unique(heatmap_df$Var1))
+  unique_y = length(unique(heatmap_df$Var2))
+
+
+
   ##the heatmap plot
   heatmap = ggplot(heatmap_df, aes(Var1, Var2, fill=Freq))+
     geom_tile( colour="White")+
@@ -91,6 +97,7 @@ Ineq_record_level_heatmap = function(data,
                          breaks = colour_quantiles)+
     geom_text(aes(x=Var1, y=Var2, label=heatmap_label),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
               size = 3)+
+    coord_fixed(ratio = unique_x / unique_y, expand = FALSE)+
     theme_minimal()+
     theme(
       legend.position="none",
@@ -180,9 +187,9 @@ Ineq_record_level_heatmap = function(data,
 
   ##stick all the graph together
   inequality_matrix = ggarrange(topbar, empty_plot, heatmap, columnchart,
-            ncol=2, nrow =2,
-            widths = c(3,1),
-            heights = c(1,3))
+                                ncol=2, nrow =2,
+                                widths = c(unique_x,2.5),
+                                heights = c(2.5,unique_y))
 
   return(inequality_matrix)
 }
