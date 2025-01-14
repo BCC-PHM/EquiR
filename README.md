@@ -15,6 +15,10 @@ Chung Au-Yeung - BCC PHM
 
 Late Updated: 2024-02-29
 
+**The latest update of version 0.1.7 only support the
+`Ineq_record_level_heatmap` function where `outcome` can be supplied by
+the users to calculate within-group percentage.**
+
 ## Introduction
 
 ### What is EquiR?
@@ -30,15 +34,8 @@ data frames provided by users.
 it is advisable to convert continuous data into categories prior to
 utilising the functions.!!**
 
-::: {.figure style="text-align: center"}
-<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/0d8ebd8e-79ec-4ab3-87a3-bf704c6643dc" width="700"/>
-
-<p class="caption">
-
-EquiR example using NHS Health Checks data
-
-</p>
-:::
+<img src="data/image/fig1.png"/> EquiR example using NHS Health Checks
+data
 
 ## EquiR basics
 
@@ -84,7 +81,7 @@ Record-level data refers to individual entries or observations within a
 dataset, each representing a distinct unit or instance of information.
 
 | ID  | Age | Gender | HEIGHT\_\_value | WEIGHT_value | Smoking_status               | Ethnicity_Broad | Outcome      | IMD_decile    |
-|-----|-----|--------|-----------------|--------------|------------------------------|-----------------|--------------|---------------|
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|
 | 1   | 42  | Male   | 1.83            | 84           | Never smoked                 | Asian           | Normal       | IMD decile 3+ |
 | 24  | 66  | Male   | 1.66            | 72           | Non-smoker - history unknown | Asian           | Pre-diabetic | IMD decile 1  |
 | 35  | 41  | Female | 1.515           | 66           | Never smoked                 | Asian           | Normal       | IMD decile 1  |
@@ -107,9 +104,11 @@ arguments:
 6.  `unit`: user can define unit if supplied, otherwise unit will be
     count as always unless Percent argument is given T, then unit wil be
     Percentaage automatically
-7.  `percent`: To allow the graph to display as percentage of total, the
-    default dispaly is number
-8.  `colour`: User defined colour for the graph (Default = `"blue"`)
+7.  `outcome`: To allow user to supply outcome variable to calculate
+    within group percentage
+8.  `inner_label`: To turn the information about the nominator and
+    denominator on or off
+9.  `colour`: User defined colour for the graph (Default = `"blue"`)
 
 Therefore, we can generate the graph by running:
 
@@ -125,13 +124,41 @@ Ineq_record_level_heatmap(data = example_data,
 
 This produces a graph that looks like this:
 
-::: {.figure style="text-align: center"}
-<img src="https://github.com/BCC-PHM/EquiR/assets/98521529/0d8ebd8e-79ec-4ab3-87a3-bf704c6643dc" width="700"/>
+<img src="data/image/fig4.png"/>
 
-<p class="caption">
+If you don’t provide an `outcome`, each cell shows the count of
+observations in that group. If you do supply an `outcome` (and it’s a
+character or factor), the heatmap displays within-group percentages,
+using the factor’s reference level as the numerator. To ensure you’re
+using the correct numerator, set the desired reference level of your
+factor explicitly. Otherwise, the function will default to the factor’s
+first level.
 
-</p>
-:::
+we can generate the graph with `outcome` by running:
+
+``` r
+Ineq_record_level_heatmap(data = example_data,
+                          col = "Ethnicity_Broad",
+                          row = "IMD_decile",
+                          coln = "Eth",
+                          rown = "IMD",
+                          unit = "Count",
+                          outcome = "Outcome",
+                          inner_label = TRUE,
+                          colour = "purple" )
+```
+
+<img src="data/image/fig2.png"/>
+
+``` r
+You are using the number of Pre-diabetic as the numerator to calculate the within-group percentage
+```
+
+When you provide an `outcome`, the function calculates **within-group
+percentages**. To clarify which outcome level serves as the numerator, a
+message is printed to the console. By default, `inner_label` is `FALSE`,
+but if you set it to `TRUE`, the numerator (N) and denominator (D)
+counts are also displayed in each cell.
 
 ### 2.Multidimensional data
 
@@ -141,7 +168,7 @@ the number of observations corresponding to individuals meeting specific
 conditions.
 
 | LA Code   | LA         | Ethnic_group | Economic_inactive            | Age                    | Observation |
-|-----------|------------|--------------|------------------------------|------------------------|-------------|
+|------------|------------|------------|------------|------------|------------|
 | E08000025 | Birmingham | White        | Retired                      | Aged 65 years and over | 97864       |
 | E08000025 | Birmingham | Asian        | Student                      | Aged 16 to 24 years    | 30507       |
 | E08000025 | Birmingham | White        | Student                      | Aged 16 to 24 years    | 28167       |
