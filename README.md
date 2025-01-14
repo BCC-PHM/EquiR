@@ -81,7 +81,7 @@ Record-level data refers to individual entries or observations within a
 dataset, each representing a distinct unit or instance of information.
 
 | ID  | Age | Gender | HEIGHT\_\_value | WEIGHT_value | Smoking_status               | Ethnicity_Broad | Outcome      | IMD_decile    |
-|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+|-----|-----|--------|-----------------|--------------|------------------------------|-----------------|--------------|---------------|
 | 1   | 42  | Male   | 1.83            | 84           | Never smoked                 | Asian           | Normal       | IMD decile 3+ |
 | 24  | 66  | Male   | 1.66            | 72           | Non-smoker - history unknown | Asian           | Pre-diabetic | IMD decile 1  |
 | 35  | 41  | Female | 1.515           | 66           | Never smoked                 | Asian           | Normal       | IMD decile 1  |
@@ -168,7 +168,7 @@ the number of observations corresponding to individuals meeting specific
 conditions.
 
 | LA Code   | LA         | Ethnic_group | Economic_inactive            | Age                    | Observation |
-|------------|------------|------------|------------|------------|------------|
+|-----------|------------|--------------|------------------------------|------------------------|-------------|
 | E08000025 | Birmingham | White        | Retired                      | Aged 65 years and over | 97864       |
 | E08000025 | Birmingham | Asian        | Student                      | Aged 16 to 24 years    | 30507       |
 | E08000025 | Birmingham | White        | Student                      | Aged 16 to 24 years    | 28167       |
@@ -225,15 +225,20 @@ This produces a graph that looks like this:
 ### 3.Aggreated level data
 
 Aggregated level data within this package refers to information that has
-been combined or summarised from individual-level data to provide a
+been combined or summarized from individual-level data to provide a
 higher-level perspective or summary. This dataframe is designed to
 include only two columns of categorical variables and one column for
-observations. \| Ethnicity \| reason \| Values \|
-\|-----------\|--------------------------------\|--------\| \| White \|
-Retired \| 108806 \| \| Asian \| Looking after home or family \| 38004
-\| \| Asian \| Student \| 34357 \| \| Black \| Student \| 31371 \| \|
-White \| Long-term sick or disabled \| 28841 \| \| White \| Looking
-after home or family \| 21297 \| \| Other \| Retired \| 18448 \|
+observations.
+
+| Ethnicity | reason                       | Values |
+|-----------|------------------------------|-------:|
+| White     | Retired                      | 108806 |
+| Asian     | Looking after home or family |  38004 |
+| Asian     | Student                      |  34357 |
+| Black     | Student                      |  31371 |
+| White     | Long-term sick or disabled   |  28841 |
+| White     | Looking after home or family |  21297 |
+| Other     | Retired                      |  18448 |
 
 The function you will need to use from "EquiR" to make the plot is
 `Ineq_aggregated_level_heatmap()`. The function takes the following
@@ -284,8 +289,8 @@ This produces a graph that looks like this:
 ### Colour palette
 
 We can also change the colour palette by setting the `colour` argument.
-The default is set to `"blue"` and currently only two more palette are
-available namely `"red"` and `"green"`.
+The default is set to `"blue"` and currently only three more palette are
+available namely `"purple"`, `"red"` and `"green"`.
 
 ### Percentage option
 
