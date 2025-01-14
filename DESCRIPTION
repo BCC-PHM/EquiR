@@ -1,7 +1,7 @@
 Package: EquiR
 Type: Package
 Title: Utility Functions for Generating Heatmaps with Bar Charts
-Version: 0.1.6
+Version: 0.1.7
 Authors@R:
     person("Chung", "Au-Yeung", 
            email = "Chung.Au-Yeung@birmingham.gov.uk", 

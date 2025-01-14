@@ -12,6 +12,7 @@ Ineq_record_level_heatmap(
   rown,
   unit = NULL,
   outcome = NA,
+  inner_label = FALSE,
   colour = "blue"
 )
 }
@@ -29,6 +30,8 @@ Ineq_record_level_heatmap(
 \item{unit}{user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically}
 
 \item{outcome}{allow user to supply outcome variable to calculate within group percentage}
+
+\item{inner_label}{to turn the infromation about the nominator and denominator on or off}
 
 \item{colour}{user defined colour for the graph}
 }

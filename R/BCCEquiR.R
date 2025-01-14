@@ -10,6 +10,7 @@
 #' @param rown   user customise row name
 #' @param unit   user can define unit if supplied, otherwise unit will be count as always unless Percent argument is given T, then unit wil be Percentaage automatically
 #' @param outcome allow user to supply outcome variable to calculate within group percentage
+#' @param inner_label to turn the infromation about the nominator and denominator on or off
 #' @param colour user defined colour for the graph
 # Add returning value description and tag
 #' @returns A graph
@@ -24,7 +25,9 @@ Ineq_record_level_heatmap = function(data,
                                      rown,
                                      unit = NULL,
                                      outcome = NA,
+                                     inner_label = FALSE,
                                      colour = "blue" ){
+
 
 
 
@@ -67,6 +70,9 @@ Ineq_record_level_heatmap = function(data,
   } else if (tolower(colour) == "green"){
     heatmap_colour = colorRampPalette(c('#FFFFFF', '#A3B18A', '#588157', '#3A5A40', '#344E41'))(100) #https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
     bar_colour = "#3A5A40"
+  } else if (tolower(colour) == "purple"){
+    heatmap_colour = colorRampPalette(c('#FFFFFF', '#E6E6FF', '#C8B4FF', '#B4A0F0', '#643296'))(100)
+    bar_colour = "#B4A0F0"
   } else {
     heatmap_colour = colorRampPalette(c('#FFFFFF', '#BFD7ED', '#60A3D9', '#0074B7', '#003B73'))(100) #this is a default blue https://www.canva.com/colors/color-palettes/speckled-eggs/
     bar_colour = "#0074B7"
@@ -75,13 +81,26 @@ Ineq_record_level_heatmap = function(data,
 
 
   ##To include percentage sign for the heatmap text label and the bar and column scales into percentage
-  if(!is.na(outcome)){
-    heatmap_label = paste0(heatmap_df$Freq, "%")
-    barscales = scales::percent_format()
-  } else{
-    heatmap_label = heatmap_df$Freq
-    barscales = scales::label_number()}
+  if (!is.na(outcome) && inner_label == TRUE) {
+    heatmap_label <- paste0(heatmap_df$Freq, "%")
+    inner_text <- paste0(
+      heatmap_label,
+      "\n(N=", heatmap_df$Freq.y, ")",
+      "\n(D=", heatmap_df$Freq.x, ")"
+    )
+    barscales <- scales::percent_format()
 
+  } else if (!is.na(outcome) && inner_label == FALSE) {
+    inner_text <- paste0(heatmap_df$Freq, "%")
+    barscales <- scales::percent_format()
+
+  } else {
+    inner_text <- heatmap_df$Freq
+    barscales <- scales::label_number()
+  }
+
+
+  ##allow user to turn label on and off
 
 
   ##Dynamically adjust coord_fixed(ratio = ...)
@@ -90,12 +109,14 @@ Ineq_record_level_heatmap = function(data,
 
 
 
+
+
   ##the heatmap plot
   heatmap = ggplot(heatmap_df, aes(Var1, Var2, fill=Freq))+
     geom_tile( colour="White")+
     scale_fill_gradientn(colours = heatmap_colour,
                          breaks = colour_quantiles)+
-    geom_text(aes(x=Var1, y=Var2, label=heatmap_label),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
+    geom_text(aes(x=Var1, y=Var2, label=inner_text),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
               size = 3)+
     coord_fixed(ratio = unique_x / unique_y, expand = FALSE)+
     theme_minimal()+
@@ -167,7 +188,7 @@ Ineq_record_level_heatmap = function(data,
           panel.background = element_blank(),
           legend.position="none",
           plot.margin = margin(0, 0, 0, 0, "pt"))+
-    scale_y_continuous(labels = barscales)+
+    scale_y_continuous(labels = barscales, expand = expansion(mult = c(0, 0.15)))+
     ylab(unit)
 
 
@@ -191,8 +212,21 @@ Ineq_record_level_heatmap = function(data,
                                 widths = c(unique_x,2.5),
                                 heights = c(2.5,unique_y))
 
+
+  ##add test of what levels of outcome the users is using
+  if (!is.na(outcome)) {
+    message_text = paste0(
+      "You are using the number of ",
+      levels(data[[outcome]])[1],
+      " as the numerator to calculate the within-group percentage"
+    )
+    message(message_text)
+  }
+
+  # Return the plot no matter what
   return(inequality_matrix)
 }
+
 
 
 
@@ -539,4 +573,5 @@ Ineq_multidi_level_heatmap = function(data, #user supplied data
   return(inequality_matrix)
 
 }
+
 
