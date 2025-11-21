@@ -12,10 +12,17 @@
 #' @param outcome allow user to supply outcome variable to calculate within group percentage
 #' @param inner_label to turn the infromation about the nominator and denominator on or off
 #' @param colour user defined colour for the graph
+#' @param probs To allow user to adjust the label to white for darker cells based on quantile
+#' @param text_size To allow user to adjust the global text size
+#' @param inner_text_size To allow user to adjust the text size of the inner label
+#' @param caption To allow user to add caption on the bottom left, it is set as blank at default
+#' @param suppress To allow user to obey the rule of small number suppression where count in cells <5 will return "<5" in the inner label
 # Add returning value description and tag
 #' @returns A graph
 # Export this function
 #' @export
+
+
 
 
 Ineq_record_level_heatmap = function(data,
@@ -26,7 +33,12 @@ Ineq_record_level_heatmap = function(data,
                                      unit = NULL,
                                      outcome = NA,
                                      inner_label = FALSE,
-                                     colour = "blue" ){
+                                     colour = "blue",
+                                     probs = 0.99,
+                                     text_size = 14,
+                                     inner_text_size = 5,
+                                     caption = "",
+                                     suppress = FALSE){
 
 
 
@@ -58,7 +70,7 @@ Ineq_record_level_heatmap = function(data,
 
 
   ##define threshold for geom text label
-  threshold = quantile(heatmap_df$Freq, probs = 0.99) ##to make the label white for greatest value
+  threshold = quantile(heatmap_df$Freq, probs = probs) ##to make the label white for greatest value
 
   ##define quantiles for the colour scale
   colour_quantiles = quantile(heatmap_df$Freq, probs = c(0, 0.25, 0.5, 0.75, 1))
@@ -94,6 +106,10 @@ Ineq_record_level_heatmap = function(data,
     inner_text <- paste0(heatmap_df$Freq, "%")
     barscales <- scales::percent_format()
 
+  } else if(suppress == TRUE){
+    inner_text <- ifelse(heatmap_df$Freq <5, "<5", as.character(heatmap_df$Freq))
+    barscales <- scales::label_number()
+
   } else {
     inner_text <- heatmap_df$Freq
     barscales <- scales::label_number()
@@ -117,15 +133,21 @@ Ineq_record_level_heatmap = function(data,
     scale_fill_gradientn(colours = heatmap_colour,
                          breaks = colour_quantiles)+
     geom_text(aes(x=Var1, y=Var2, label=inner_text),color = ifelse(heatmap_df$Freq>threshold, "white","black"),
-              size = 3)+
-    coord_fixed(ratio = unique_x / unique_y, expand = FALSE)+
-    theme_minimal()+
+              size = inner_text_size)+
+    # coord_fixed(ratio = unique_x / unique_y, expand = FALSE)+
+    coord_cartesian(expand = FALSE) +
+    theme_minimal(base_size = text_size)+
     theme(
+      axis.ticks = element_line(size = 1, color="black"),
+      axis.ticks.length = unit(.25, "cm"),
       legend.position="none",
-      panel.spacing = unit(0, "pt"))+
+      panel.spacing = unit(0, "pt"),
+      plot.caption = element_text(hjust = -0.5))+
     xlab({{coln}})+
-    ylab({{rown}})
-
+    ylab({{rown}})+
+    labs(
+      caption = caption
+    )
 
   ##Handle unit display
   if (!is.null(unit)) { #this check if user has supplied a unit, If they have,
@@ -155,14 +177,17 @@ Ineq_record_level_heatmap = function(data,
   ##the top bar chart
   topbar  = ggplot(topbar_df, aes(x=Var1, y =Freq))+
     geom_bar(stat = "identity", fill = bar_colour)+
-    theme_minimal()+
+    theme_minimal(base_size = text_size)+
     theme(axis.text.x = element_blank(),
           axis.title.x = element_blank(),
+          axis.ticks.y =element_line(size = 1, color="black"),
+          axis.ticks.length.y = unit(.25, "cm"),
+          axis.line = element_line(size = 1, color="black"),
           panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
           panel.background = element_blank(),
           legend.position="none",
-          plot.margin = margin(0, 0, 0, 0, "pt"))+
-    scale_y_continuous(labels = barscales)+
+          plot.margin = margin(20, 0, 10, 20, "pt"))+
+    scale_y_continuous(labels = barscales, expand = expansion(mult = c(0, 0.05)))+
     ylab(unit)
 
   ##the third layer of transforming data for right hand side column chart
@@ -179,24 +204,30 @@ Ineq_record_level_heatmap = function(data,
 
   ##the right hand side column chart
   columnchart  = ggplot(columnchart_df, aes(x=Var1, y =Freq))+
-    geom_bar(stat = "identity", fill = bar_colour)+
-    theme_minimal()+
-    coord_flip()+
+    geom_bar(stat = "identity", fill = bar_colour)+ # Keep the bar width narrow
+    geom_hline(yintercept = 0, size = 1, color="black") +
+    theme_minimal(base_size = text_size)+
+    coord_flip(clip = "off")+
     theme(axis.text.y = element_blank(),
           axis.title.y = element_blank(),
+          axis.ticks.x = element_line(size = 1, color="black"),
+          axis.ticks.length.x = unit(.25, "cm"),
+          axis.line = element_line(size = 1, color="black"),
           panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
           panel.background = element_blank(),
           legend.position="none",
-          plot.margin = margin(0, 0, 0, 0, "pt"))+
-    scale_y_continuous(labels = barscales, expand = expansion(mult = c(0, 0.15)))+
-    ylab(unit)
-
-
+          # IMPORTANT: Allow the title to wrap and reduce its size if necessary
+          axis.title.x = element_text(size = text_size * 0.8, lineheight = 0.8),
+          panel.spacing = unit(0, "pt"),
+          plot.margin = unit(c(0,20,0,0), 'pt'))+
+    scale_y_continuous(labels = barscales, expand = expansion(mult = c(0, 0.05)), n.breaks = 3)+
+    # IMPORTANT: Wrap the long text so it doesn't force the plot to be wide
+    ylab(stringr::str_wrap(unit, width = 15))
 
   ##the fourth layer of making an empty plot for the top right hand corner
-  empty_plot = ggplot(columnchart_df, aes(x=Var1, y =Freq))+
+  empty_plot <- ggplot(columnchart_df, aes(x=Var1, y =Freq))+
     geom_blank()+
-    theme_minimal()+
+    theme_minimal(base_size = text_size)+
     coord_flip()+
     theme(axis.text.y = element_blank(),
           axis.title.y = element_blank(),
@@ -204,15 +235,13 @@ Ineq_record_level_heatmap = function(data,
           axis.title.x = element_blank(),
           panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
           panel.background = element_blank(),
-          legend.position="none")
+          legend.position="none",
+          plot.margin = unit(c(0,20,20,20), 'pt'))
 
   ##stick all the graph together
-  inequality_matrix = ggarrange(topbar, empty_plot, heatmap, columnchart,
-                                ncol=2, nrow =2,
-                                widths = c(unique_x,2.5),
-                                heights = c(2.5,unique_y))
-
-
+  inequality_matrix = topbar + empty_plot+ heatmap +columnchart +
+    plot_layout(widths = c(3, 1),
+                heights = c(1, 3))
   ##add test of what levels of outcome the users is using
   if (!is.na(outcome)) {
     message_text = paste0(
@@ -226,7 +255,6 @@ Ineq_record_level_heatmap = function(data,
   # Return the plot no matter what
   return(inequality_matrix)
 }
-
 
 
 

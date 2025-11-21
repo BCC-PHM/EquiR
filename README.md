@@ -15,9 +15,11 @@ Chung Au-Yeung - BCC PHM
 
 Late Updated: 2025-01-14
 
-**The latest update of version 0.1.7 only support the
+**The latest update of version 0.1.8 only support the
 `Ineq_record_level_heatmap` function where `outcome` can be supplied by
-the users to calculate within-group percentage.**
+the users to calculate within-group percentage. Small number suppression
+and text adjustment are also added only to `Ineq_record_level_heatmap`
+function.**
 
 ## Introduction
 
@@ -34,8 +36,8 @@ data frames provided by users.
 it is advisable to convert continuous data into categories prior to
 utilising the functions.!!**
 
-<img src="data/image/fig1.png"/> EquiR example using NHS Health Checks
-data
+<img src="data/image/inequ_matrix-1.png"/> EquiR example using data from
+drug and alcohol service provider
 
 ## EquiR basics
 
@@ -80,51 +82,77 @@ from the `EquiR` pacakge. The following is the demonstration:
 Record-level data refers to individual entries or observations within a
 dataset, each representing a distinct unit or instance of information.
 
-| ID  | Age | Gender | HEIGHT\_\_value | WEIGHT_value | Smoking_status               | Ethnicity_Broad | Outcome      | IMD_decile    |
-|--------|--------|--------|--------|--------|--------|--------|--------|--------|
-| 1   | 42  | Male   | 1.83            | 84           | Never smoked                 | Asian           | Normal       | IMD decile 3+ |
-| 24  | 66  | Male   | 1.66            | 72           | Non-smoker - history unknown | Asian           | Pre-diabetic | IMD decile 1  |
-| 35  | 41  | Female | 1.515           | 66           | Never smoked                 | Asian           | Normal       | IMD decile 1  |
-| 41  | 42  | Female | 1.58            | 65           | Never smoked                 | Asian           | Normal       | IMD decile 1  |
-| 54  | 52  | Male   | 1.73            | 62           | Never smoked                 | Asian           | Normal       | IMD decile 3+ |
+| ID  | Age | Gender | DrugCategory | Source | StartDate | Ethnicity5                          | IMD_quintile   |
+|--------|--------|--------|--------|--------|--------|----------------|--------|
+| 1   | 42  | Male   | Alcohol      | CGL    | 2024      | Asian, Asian British or Asian Welsh | IMD quintile 4 |
+| 24  | 66  | Male   | Alcohol      | CGL    | 2024      | Asian, Asian British or Asian Welsh | IMD quintile 1 |
+| 35  | 41  | Female | Alcohol      | CGL    | 2024      | Asian, Asian British or Asian Welsh | IMD quintile 5 |
+| 41  | 42  | Female | Alcohol      | CGL    | 2024      | Asian, Asian British or Asian Welsh | IMD quintile 1 |
+| 54  | 52  | Male   | Alcohol      | CGL    | 2024      | Asian, Asian British or Asian Welsh | IMD quintile 2 |
 
 The function you will need to use from "EquiR" to make the plot is
 `Ineq_record_level_heatmap()`. The function takes the following basic
 arguments:
 
 1.  `data`: A record level data supplied by users
+
 2.  `col`: A column from `data` consisting a categorical variable
     defined by user which will be the column of the heatmap
+
 3.  `row`: A row from `data` consisting a categorical variable defined
     by user which will be the row of the heatmap
+
 4.  `coln`: The label to be displayed for the `col` on the graph defined
     by users
+
 5.  `rown`: The label to be displayed for the `row` on the graph defined
     by users
+
 6.  `unit`: user can define unit if supplied, otherwise unit will be
     count as always unless Percent argument is given T, then unit wil be
     Percentaage automatically
+
 7.  `outcome`: To allow user to supply outcome variable to calculate
     within group percentage
+
 8.  `inner_label`: To turn the information about the nominator and
     denominator on or off
+
 9.  `colour`: User defined colour for the graph (Default = `"blue"`)
+
+10. `probs`: To allow user to adjust the label to white for darker cells
+    based on quantile
+
+11. `text_size`: To allow user to adjust the global text size
+
+12. `inner_text_size`: To allow user to adjust the text size of the
+    inner label
+
+13. `caption`: To allow user to add caption on the bottom left, it is
+    set as blank at default
+
+14. `suppress`: To allow user to obey the rule of small number
+    suppression where count in cells \<5 will return "\<5" in the inner
+    label
 
 Therefore, we can generate the graph by running:
 
 ``` r
 Ineq_record_level_heatmap(data = example_data,
-                          col = "Ethnicity_Broad",
-                          row = "IMD_decile",
-                          coln = "Eth",
-                          rown = "IMD",
-                          unit = "Count",
-                          colour = "blue" )
+                          row = "Ethnicity5",
+                          col = "IMD_quintile",
+                          rown = "Ethnicity",
+                          coln = "IMD quintile",
+                          outcome = NA,
+                          inner_label = TRUE,
+                          caption = "Source: Service providers",
+                          suppress = TRUE
+                         )
 ```
 
 This produces a graph that looks like this:
 
-<img src="data/image/fig4.png"/>
+![](data/image/inequ_matrix-1.png)
 
 If you don’t provide an `outcome`, each cell shows the count of
 observations in that group. If you do supply an `outcome` (and it’s a
@@ -132,26 +160,40 @@ character or factor), the heatmap displays within-group percentages,
 using the factor’s reference level as the numerator. To ensure you’re
 using the correct numerator, set the desired reference level of your
 factor explicitly. Otherwise, the function will default to the factor’s
-first level.
+first level. Using the following data set where outcome column is given:
+
+| ID  | Age | Gender | Alcohol_cateogroy              | Source | StartDate | Ethnicity_Broad | Outcome      | IMD_decile   |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| 1   | 42  | Male   | Increased/Higher risk drinking | CGL    | 2024      | Asian           | Normal       | IMD decile 1 |
+| 24  | 66  | Male   | Increased/Higher risk drinking | CGL    | 2024      | Asian           | Pre-diabetic | IMD decile 1 |
+| 35  | 41  | Female | Increased/Higher risk drinking | CGL    | 2024      | Asian           | Normal       | IMD decile 1 |
+| 41  | 42  | Female | Non-drinker                    | CGL    | 2024      | Asian           | Normal       | IMD decile 1 |
+| 54  | 52  | Male   | Non-drinker                    | CGL    | 2024      | Asian           | Normal       | IMD decile 1 |
 
 we can generate the graph with `outcome` by running:
 
 ``` r
-Ineq_record_level_heatmap(data = example_data,
-                          col = "Ethnicity_Broad",
-                          row = "IMD_decile",
-                          coln = "Eth",
-                          rown = "IMD",
-                          unit = "Count",
-                          outcome = "Outcome",
+Ineq_record_level_heatmap(data = example_data2,
+                          col="Ethnicity_Broad",
+                          row ="IMD_decile",
+                          coln = "Ethnicity",
+                          rown = "IMD Qunitle",
+                          outcome = "Alcohol_category",
                           inner_label = TRUE,
-                          colour = "purple" )
+                          unit = "Increased/Higher\n risk drinking %\n (Female)",
+                          colour = "purple",
+                          text_size = 20,
+                          inner_text_size = 4,
+                          caption = "Source: NHS Health Checks")
 ```
 
-<img src="data/image/fig2.png"/>
+![](data/image/inequ_matrix_female-1.png)
+
+The console will print the numerator that the function is currently
+using as a reminder:
 
 ``` r
-You are using the number of Pre-diabetic as the numerator to calculate the within-group percentage
+You are using the number of Increased/Higher risk drinking as the numerator to calculate the within-group percentage
 ```
 
 When you provide an `outcome`, the function calculates **within-group
