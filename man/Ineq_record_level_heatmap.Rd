@@ -13,7 +13,15 @@ Ineq_record_level_heatmap(
   unit = NULL,
   outcome = NA,
   inner_label = FALSE,
-  colour = "blue"
+  colour = "blue",
+  probs = 0.99,
+  text_size = 14,
+  inner_text_size = 5,
+  caption = "",
+  caption_size = 8,
+  title = "",
+  title_size = 16,
+  suppress = FALSE
 )
 }
 \arguments{
@@ -34,6 +42,22 @@ Ineq_record_level_heatmap(
 \item{inner_label}{to turn the infromation about the nominator and denominator on or off}
 
 \item{colour}{user defined colour for the graph}
+
+\item{probs}{To allow user to adjust the label to white for darker cells based on quantile}
+
+\item{text_size}{To allow user to adjust the global text size}
+
+\item{inner_text_size}{To allow user to adjust the text size of the inner label}
+
+\item{caption}{To allow user to add caption on the bottom left, it is set as blank at default}
+
+\item{caption_size}{Adjust the caption text-size}
+
+\item{title}{To add a title}
+
+\item{title_size}{Adjust the title text-size}
+
+\item{suppress}{To allow user to obey the rule of small number suppression where count in cells <5 will return "<5" in the inner label}
 }
 \value{
 A graph

@@ -16,11 +16,16 @@
 #' @param text_size To allow user to adjust the global text size
 #' @param inner_text_size To allow user to adjust the text size of the inner label
 #' @param caption To allow user to add caption on the bottom left, it is set as blank at default
+#' @param caption_size Adjust the caption text-size
+#' @param title To add a title
+#' @param title_size Adjust the title text-size
 #' @param suppress To allow user to obey the rule of small number suppression where count in cells <5 will return "<5" in the inner label
 # Add returning value description and tag
 #' @returns A graph
 # Export this function
 #' @export
+
+
 
 
 
@@ -38,6 +43,9 @@ Ineq_record_level_heatmap = function(data,
                                      text_size = 14,
                                      inner_text_size = 5,
                                      caption = "",
+                                     caption_size =8,
+                                     title = "",
+                                     title_size = 16,
                                      suppress = FALSE){
 
 
@@ -144,10 +152,10 @@ Ineq_record_level_heatmap = function(data,
       panel.spacing = unit(0, "pt"),
       plot.caption = element_text(hjust = -0.5))+
     xlab({{coln}})+
-    ylab({{rown}})+
-    labs(
-      caption = caption
-    )
+    ylab({{rown}})
+  # labs(
+  #   caption = caption
+  # )
 
   ##Handle unit display
   if (!is.null(unit)) { #this check if user has supplied a unit, If they have,
@@ -242,6 +250,20 @@ Ineq_record_level_heatmap = function(data,
   inequality_matrix = topbar + empty_plot+ heatmap +columnchart +
     plot_layout(widths = c(3, 1),
                 heights = c(1, 3))
+
+  # Add title/subtitle/caption at the patchwork level
+  inequality_matrix = inequality_matrix +
+    patchwork::plot_annotation(
+      title = title,
+      caption = caption,
+      theme = ggplot2::theme(
+        plot.title = ggplot2::element_text(size = title_size, hjust = 0.5),
+        plot.caption = ggplot2::element_text(size = caption_size, hjust = 0)
+      )
+    )
+
+
+
   ##add test of what levels of outcome the users is using
   if (!is.na(outcome)) {
     message_text = paste0(
